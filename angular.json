@@ -2,5 +2,169 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "ngx-popup-dialog": {
+      "root": "projects/ngx-popup-dialog",
+      "sourceRoot": "projects/ngx-popup-dialog/src",
+      "projectType": "library",
+      "prefix": "pd",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-popup-dialog/tsconfig.lib.json",
+            "project": "projects/ngx-popup-dialog/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-popup-dialog/src/test.ts",
+            "tsConfig": "projects/ngx-popup-dialog/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-popup-dialog/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-popup-dialog/tsconfig.lib.json",
+              "projects/ngx-popup-dialog/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "ngx-popup-dialog-demo": {
+      "root": "projects/ngx-popup-dialog-demo/",
+      "sourceRoot": "projects/ngx-popup-dialog-demo/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ngx-popup-dialog-demo",
+            "index": "projects/ngx-popup-dialog-demo/src/index.html",
+            "main": "projects/ngx-popup-dialog-demo/src/main.ts",
+            "polyfills": "projects/ngx-popup-dialog-demo/src/polyfills.ts",
+            "tsConfig": "projects/ngx-popup-dialog-demo/tsconfig.app.json",
+            "assets": [
+              "projects/ngx-popup-dialog-demo/src/favicon.ico",
+              "projects/ngx-popup-dialog-demo/src/assets"
+            ],
+            "styles": [
+              "projects/ngx-popup-dialog-demo/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/ngx-popup-dialog-demo/src/environments/environment.ts",
+                  "with": "projects/ngx-popup-dialog-demo/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ngx-popup-dialog-demo:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ngx-popup-dialog-demo:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ngx-popup-dialog-demo:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-popup-dialog-demo/src/test.ts",
+            "polyfills": "projects/ngx-popup-dialog-demo/src/polyfills.ts",
+            "tsConfig": "projects/ngx-popup-dialog-demo/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-popup-dialog-demo/karma.conf.js",
+            "styles": [
+              "projects/ngx-popup-dialog-demo/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/ngx-popup-dialog-demo/src/favicon.ico",
+              "projects/ngx-popup-dialog-demo/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-popup-dialog-demo/tsconfig.app.json",
+              "projects/ngx-popup-dialog-demo/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "ngx-popup-dialog-demo-e2e": {
+      "root": "projects/ngx-popup-dialog-demo-e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/ngx-popup-dialog-demo-e2e/protractor.conf.js",
+            "devServerTarget": "ngx-popup-dialog-demo:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ngx-popup-dialog-demo:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/ngx-popup-dialog-demo-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ngx-popup-dialog"
 }
