@@ -1,0 +1,7 @@
+<p>Hello {{data.name}}</p>
+<label>Enter your favorite animal: </label>
+<input type="text" name="" id="" [(ngModel)]="data.animal">
+<div>
+  <button mat-dialog-close>No Thanks</button>
+  <button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+</div>

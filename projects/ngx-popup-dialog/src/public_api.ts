@@ -2,4 +2,5 @@
  * Public API Surface of ngx-popup-dialog
  */
 
-export * from './lib/ngx-popup-dialog.module';
+export { NgxPopupDialogModule } from './lib/ngx-popup-dialog.module';
+export { PopupDialogService, PopupDialogConfig } from './lib/popup-dialog/popup-dialog.service';

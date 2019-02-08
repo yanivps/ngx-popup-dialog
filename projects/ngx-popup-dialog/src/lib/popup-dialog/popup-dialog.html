@@ -1,0 +1,4 @@
+<div #dialogContainer [attr.dir]="direction == 'rtl' ? 'rtl' : ''" (transitionend)="containerTransitionEnd($event)"
+ class="ngx-popup-dialog-container" [ngClass]="{'visible': visible, 'scale-to-top': scaleBottomToTop, 'rtl': direction == 'rtl'}" >
+  <ng-template #popupContent></ng-template>
+</div>
