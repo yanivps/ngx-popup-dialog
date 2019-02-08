@@ -13,15 +13,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { PopupDialogServiceConfig } from './popup-dialog.service';
 
 export declare type Direction = 'ltr' | 'rtl';
 
-export interface PopupDialogConfig {
+export interface PopupDialogConfig extends PopupDialogServiceConfig {
   triggeringElement: any;
   component: ComponentType<any> | TemplateRef<any>;
-  coverTriggeringElement?: boolean;
-
-  direction?: Direction;
 }
 
 export interface PopupDialogData {

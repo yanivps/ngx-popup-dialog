@@ -24,6 +24,7 @@ export class AppComponent {
       {
         direction: "ltr",
         // coverTriggeringElement: true,
+        maxHeight: 200,
         data: { name: this.name, animal: this.animal }
       }
     );

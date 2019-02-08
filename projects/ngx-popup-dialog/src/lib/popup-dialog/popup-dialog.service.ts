@@ -1,13 +1,18 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, TemplateRef } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
 
 import { Direction, PopupDialog, PopupDialogData } from './popup-dialog';
 
-export interface PopupDialogConfig  {
+export interface PopupDialogServiceConfig {
   direction?: Direction;
   coverTriggeringElement?: boolean;
+  maxWidth?: number | string;
+  maxHeight?: number | string;
+}
+
+export interface PopupDialogConfig extends PopupDialogServiceConfig {
   data?: any;
 }
 
@@ -26,17 +31,18 @@ export class PopupDialogService {
       config: {
         ...config,
         component: componentOrTemplateRef,
-        triggeringElement: triggeringElement
+        triggeringElement: triggeringElement,
+        maxWidth: (typeof config.maxWidth === "number") ? config.maxWidth + 'px' : config.maxWidth,
+        maxHeight: (typeof config.maxHeight === "number") ? config.maxHeight + 'px' : config.maxHeight
       },
       data: data
     }
-    const popupDialogConfig = {
+    const popupDialogConfig: MatDialogConfig = {
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: false,
       scrollStrategy: this._overlay.scrollStrategies.noop(),
       panelClass: 'ngx-popup-dialog-overlay',
-      data: popupDialogData,
-
+      data: popupDialogData
     }
     let dialogRef = this._dialogService.open(PopupDialog, popupDialogConfig);
     return dialogRef;
