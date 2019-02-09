@@ -12,6 +12,26 @@ interface PopupDialogData {
   styleUrls: ['./cool-popup-dialog.css']
 })
 export class CoolPopupDialog implements OnInit {
+  items = [
+    "Aaaa",
+    "Bbbb",
+    "Cccc",
+    "Dddd",
+    "Eeee",
+    "Ffff",
+    "Gggg",
+    "Hhhh",
+    "Iiii",
+    // "Aaaa",
+    // "Bbbb",
+    // "Cccc",
+    // "Dddd",
+    // "Eeee",
+    // "Ffff",
+    // "Gggg",
+    // "Hhhh",
+    // "Iiii"
+  ]
   constructor(@Inject(MAT_DIALOG_DATA) public data: PopupDialogData) {
   }
 

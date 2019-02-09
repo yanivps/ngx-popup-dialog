@@ -29,6 +29,7 @@ export interface PopupDialogData {
 
 interface OutOfViewport {
   top: boolean;
+  topIfScaleToTop: boolean;
   left: boolean;
   bottom: boolean;
   right: boolean;
@@ -121,10 +122,12 @@ export class PopupDialog {
   }
 
   private positionDialogUpIfBottomOutsideViewport() {
-    let dialogContainerElem = this.dialogContainerRef.nativeElement as HTMLElement;
-    let result = this.isOutOfViewport(dialogContainerElem);
+    if (!this.config.scaleToTopOnBottomOverflow) return;
 
-    if (result.bottom) {
+    let dialogContainerElem = this.dialogContainerRef.nativeElement as HTMLElement;
+    let result = this.isOutOfViewport();
+
+    if (result.bottom && !result.topIfScaleToTop) {
       this.scaleBottomToTop = true;
       const matDialogConfig: MatDialogConfig = new MatDialogConfig();
       const rect = dialogContainerElem.getBoundingClientRect();
@@ -139,26 +142,34 @@ export class PopupDialog {
     }
   }
 
-  private isOutOfViewport(elem): OutOfViewport {
+  private isOutOfViewport(): OutOfViewport {
+    let container = this.dialogContainerRef.nativeElement;
+    let triggeringElement = this.config.triggeringElement;
     // Get element's bounding
-    var bounding = elem.getBoundingClientRect();
+    var bounding = container.getBoundingClientRect();
 
     // reduce height from top position if scale to top
     let top = bounding.top;
     if (this.scaleBottomToTop) {
       top = this.config.coverTriggeringElement ?
-        bounding.top - elem.offsetHeight + this.config.triggeringElement.offsetHeight :
-        bounding.top - elem.offsetHeight - this.config.triggeringElement.offsetHeight
+        bounding.top - container.offsetHeight + triggeringElement.offsetHeight :
+        bounding.top - container.offsetHeight - triggeringElement.offsetHeight
+    }
+
+    let topIfScaleToTop = top;
+    if (!this.scaleBottomToTop) {
+      topIfScaleToTop = top - (this.config.coverTriggeringElement ? container.offsetHeight - triggeringElement.offsetHeight : container.offsetHeight + triggeringElement.offsetHeight);
     }
 
     var out: any = {};
     out.top = top < 0;
+    out.topIfScaleToTop = topIfScaleToTop < 0;
     out.left = bounding.left < 0;
-    out.bottom = (bounding.top + elem.offsetHeight) > (window.innerHeight || document.documentElement.offsetHeight);
+    out.bottom = (bounding.top + container.offsetHeight) > (window.innerHeight || document.documentElement.offsetHeight);
     if (this.scaleBottomToTop && !out.bottom) {
       if (!out.top) out.bottom = true;
     }
-    out.right = (bounding.left + elem.offsetWidth) > (window.innerWidth || document.documentElement.offsetWidth);
+    out.right = (bounding.left + container.offsetWidth) > (window.innerWidth || document.documentElement.offsetWidth);
     out.any = out.top || out.left || out.bottom || out.right;
     out.all = out.top && out.left && out.bottom && out.right;
 

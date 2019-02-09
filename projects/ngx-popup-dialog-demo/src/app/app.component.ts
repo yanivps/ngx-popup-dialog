@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PopupDialogService } from 'ngx-popup-dialog';
+// import { PopupDialogService } from 'ngx-popup-dialog';
 
 import { CoolPopupDialog } from './cool-popup-dialog/cool-popup-dialog';
+import { PopupDialogService } from '../../../ngx-popup-dialog/src/public_api';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent {
       {
         direction: "ltr",
         // coverTriggeringElement: true,
-        maxHeight: 200,
+        // scaleToTopOnBottomOverflow: false,
+        maxHeight: 600,
         data: { name: this.name, animal: this.animal }
       }
     );

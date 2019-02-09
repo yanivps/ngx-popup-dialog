@@ -8,6 +8,7 @@ import { Direction, PopupDialog, PopupDialogData } from './popup-dialog';
 export interface PopupDialogServiceConfig {
   direction?: Direction;
   coverTriggeringElement?: boolean;
+  scaleToTopOnBottomOverflow?: boolean;
   maxWidth?: number | string;
   maxHeight?: number | string;
 }
@@ -33,7 +34,8 @@ export class PopupDialogService {
         component: componentOrTemplateRef,
         triggeringElement: triggeringElement,
         maxWidth: (typeof config.maxWidth === "number") ? config.maxWidth + 'px' : config.maxWidth,
-        maxHeight: (typeof config.maxHeight === "number") ? config.maxHeight + 'px' : config.maxHeight
+        maxHeight: (typeof config.maxHeight === "number") ? config.maxHeight + 'px' : config.maxHeight,
+        scaleToTopOnBottomOverflow: config.scaleToTopOnBottomOverflow == null ? true : config.scaleToTopOnBottomOverflow
       },
       data: data
     }
