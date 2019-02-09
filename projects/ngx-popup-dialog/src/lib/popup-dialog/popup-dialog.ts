@@ -11,9 +11,12 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  InjectionToken,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { PopupDialogServiceConfig } from './popup-dialog.service';
+
+export const POPUP_DIALOG_CLOSE = new InjectionToken<(dialogResult: any) => void>('POPUP_DIALOG_CLOSE');
 
 export declare type Direction = 'ltr' | 'rtl';
 
@@ -46,6 +49,7 @@ interface OutOfViewport {
 export class PopupDialog {
   @ViewChild('popupContent', { read: ViewContainerRef }) popupContentViewContainer: ViewContainerRef;
   @ViewChild('dialogContainer') protected dialogContainerRef: ElementRef;
+  dialogResult: any;
   visible = false;
   isOpened = false;
   scaleBottomToTop = false;
@@ -76,7 +80,7 @@ export class PopupDialog {
 
     var container = this.dialogContainerRef.nativeElement;
     if (container !== event.target && !this.childOf(event.target, container)) {
-      this.closeDialog(event.target);
+      this.closeDialog();
     };
   }
 
@@ -102,6 +106,10 @@ export class PopupDialog {
       {
         provide: MAT_DIALOG_DATA,
         useValue: this.data || {}
+      },
+      {
+        provide: POPUP_DIALOG_CLOSE,
+        useValue: this.closeDialog.bind(this)
       }
     ]);
     let componentRef = this.popupContentViewContainer.createComponent(componentFactory, 0, injector);
@@ -178,16 +186,12 @@ export class PopupDialog {
 
   containerTransitionEnd(event: Event) {
     if (event.target == this.dialogContainerRef.nativeElement && !this.visible) {
-      this.dialogRef.close();
+      this.dialogRef.close(this.dialogResult);
     }
   }
 
-  private closeDialog(focusElement?: HTMLElement) {
-    if (focusElement) {
-      this.dialogRef.afterClosed().subscribe(x => {
-        focusElement.focus();
-      })
-    }
+  public closeDialog(dialogResult?: any) {
+    this.dialogResult = dialogResult;
     this.visible = false;
   }
 

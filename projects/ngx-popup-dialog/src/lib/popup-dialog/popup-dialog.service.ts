@@ -1,7 +1,7 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, TemplateRef } from '@angular/core';
-import { MatDialog, MatDialogRef, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 
 import { Direction, PopupDialog, PopupDialogData } from './popup-dialog';
 
@@ -44,6 +44,7 @@ export class PopupDialogService {
       hasBackdrop: false,
       scrollStrategy: this._overlay.scrollStrategies.noop(),
       panelClass: 'ngx-popup-dialog-overlay',
+      restoreFocus: false,
       data: popupDialogData
     }
     let dialogRef = this._dialogService.open(PopupDialog, popupDialogConfig);

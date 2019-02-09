@@ -4,6 +4,7 @@
 <div>
   <button mat-dialog-close>No Thanks</button>
   <button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+  <button (click)="codeClose()">Code close</button>
 </div>
 <ul>
   <li *ngFor="let item of items">{{item}}</li>

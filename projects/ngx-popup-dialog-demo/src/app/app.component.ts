@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-// import { PopupDialogService } from 'ngx-popup-dialog';
+import { PopupDialogService } from 'ngx-popup-dialog';
 
 import { CoolPopupDialog } from './cool-popup-dialog/cool-popup-dialog';
-import { PopupDialogService } from '../../../ngx-popup-dialog/src/public_api';
 
 @Component({
   selector: 'app-root',

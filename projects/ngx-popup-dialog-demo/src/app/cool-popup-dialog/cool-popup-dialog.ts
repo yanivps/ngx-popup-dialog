@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { POPUP_DIALOG_CLOSE } from 'ngx-popup-dialog';
 
 interface PopupDialogData {
   name: string;
@@ -32,10 +33,16 @@ export class CoolPopupDialog implements OnInit {
     // "Hhhh",
     // "Iiii"
   ]
-  constructor(@Inject(MAT_DIALOG_DATA) public data: PopupDialogData) {
+  constructor(
+    @Inject(POPUP_DIALOG_CLOSE) private _dialogClose: (dialogResult?: any) => void,
+    @Inject(MAT_DIALOG_DATA) public data: PopupDialogData) {
   }
 
   ngOnInit() {
+  }
+
+  codeClose() {
+    this._dialogClose('bye!');
   }
 
 }
