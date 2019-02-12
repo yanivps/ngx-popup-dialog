@@ -79,9 +79,23 @@ export class PopupDialog {
     if (!this.isOpened) return;
 
     var container = this.dialogContainerRef.nativeElement;
-    if (container !== event.target && !this.childOf(event.target, container)) {
-      this.closeDialog();
-    };
+    if (container === event.target || this.childOf(event.target, container)) {
+      return;
+    }
+    if (this.config.suppressCloseOnClickSelectors) {
+      for (let i = 0; i < this.config.suppressCloseOnClickSelectors.length; i++) {
+        const selector = this.config.suppressCloseOnClickSelectors[i];
+        const elements = document.querySelectorAll(selector);
+        for (let i = 0; i < elements.length; i++) {
+          const elem = elements[i];
+          if (elem === event.target || this.childOf(event.target, elem)) {
+            return;
+          }
+        }
+      }
+    }
+
+    this.closeDialog();
   }
 
   ngOnInit() {

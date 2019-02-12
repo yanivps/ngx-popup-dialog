@@ -25,6 +25,7 @@ export class AppComponent {
         direction: "ltr",
         // coverTriggeringElement: true,
         // scaleToTopOnBottomOverflow: false,
+        // suppressCloseOnClickSelectors: ['.supress-close-container'],
         maxHeight: 600,
         data: { name: this.name, animal: this.animal }
       }

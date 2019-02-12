@@ -11,6 +11,7 @@ export interface PopupDialogServiceConfig {
   scaleToTopOnBottomOverflow?: boolean;
   maxWidth?: number | string;
   maxHeight?: number | string;
+  suppressCloseOnClickSelectors?: string | string[];
 }
 
 export interface PopupDialogConfig extends PopupDialogServiceConfig {
@@ -35,7 +36,8 @@ export class PopupDialogService {
         triggeringElement: triggeringElement,
         maxWidth: (typeof config.maxWidth === "number") ? config.maxWidth + 'px' : config.maxWidth,
         maxHeight: (typeof config.maxHeight === "number") ? config.maxHeight + 'px' : config.maxHeight,
-        scaleToTopOnBottomOverflow: config.scaleToTopOnBottomOverflow == null ? true : config.scaleToTopOnBottomOverflow
+        scaleToTopOnBottomOverflow: config.scaleToTopOnBottomOverflow == null ? true : config.scaleToTopOnBottomOverflow,
+        suppressCloseOnClickSelectors: typeof config.suppressCloseOnClickSelectors === "string" ? [config.suppressCloseOnClickSelectors] : config.suppressCloseOnClickSelectors
       },
       data: data
     }
