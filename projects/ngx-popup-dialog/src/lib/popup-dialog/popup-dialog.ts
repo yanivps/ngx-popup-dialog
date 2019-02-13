@@ -66,7 +66,8 @@ export class PopupDialog {
     this.direction = data.config.direction || getComputedStyle(this.config.triggeringElement).direction as ('ltr' | 'rtl')
   }
 
-  @HostListener('window:scroll', ['$event'])
+  scrollBoundedFunction = this.onScroll.bind(this);
+
   onScroll(event) {
     this.positionDialogWhereTriggeringElement();
     this.positionDialogUpIfBottomOutsideViewport();
@@ -99,6 +100,7 @@ export class PopupDialog {
   }
 
   ngOnInit() {
+    this.registerOrUnregisterAncestrosScrollEvent();
     this.loadComponent();
     this.dialogRef.beforeClose().subscribe(x => {
       this.visible = false;
@@ -109,6 +111,10 @@ export class PopupDialog {
     this.positionDialogWhereTriggeringElement();
     this.positionDialogUpIfBottomOutsideViewport();
     this.visible = true;
+  }
+
+  ngOnDestroy() {
+    this.registerOrUnregisterAncestrosScrollEvent(false);
   }
 
   loadComponent() {
@@ -129,6 +135,27 @@ export class PopupDialog {
     let componentRef = this.popupContentViewContainer.createComponent(componentFactory, 0, injector);
   }
 
+  containerTransitionEnd(event: Event) {
+    if (event.target == this.dialogContainerRef.nativeElement && !this.visible) {
+      this.dialogRef.close(this.dialogResult);
+    }
+  }
+
+  closeDialog(dialogResult?: any) {
+    this.dialogResult = dialogResult;
+    this.visible = false;
+  }
+
+  private registerOrUnregisterAncestrosScrollEvent(register = true) {
+    let elem = (this.config.triggeringElement as Node).parentNode;
+    while (elem !== null) {
+      register ?
+        elem.addEventListener("scroll", this.scrollBoundedFunction) :
+        elem.removeEventListener("scroll", this.scrollBoundedFunction);
+      elem = elem.parentNode;
+    }
+  }
+
   private positionDialogWhereTriggeringElement() {
     const matDialogConfig: MatDialogConfig = new MatDialogConfig();
     const rect = this.config.triggeringElement.getBoundingClientRect();
@@ -136,10 +163,14 @@ export class PopupDialog {
       rect.bottom - this.config.triggeringElement.offsetHeight - 1 :
       rect.bottom
 
-    let left = this.direction == 'rtl' ?
-      rect.left - this.dialogContainerRef.nativeElement.offsetWidth + this.config.triggeringElement.offsetWidth :
-      rect.left;
-    matDialogConfig.position = { left: `${left}px`, top: `${top}px` };
+    matDialogConfig.position = { top: `${top}px` };
+    if (this.direction == 'rtl') {
+      let right = window.innerWidth - rect.left - this.config.triggeringElement.offsetWidth;
+      matDialogConfig.position.right = `${right}px`;
+    } else {
+      matDialogConfig.position.left = `${rect.left}px`;
+    }
+
     this.dialogRef.updatePosition(matDialogConfig.position);
   }
 
@@ -157,7 +188,15 @@ export class PopupDialog {
       let top = this.config.coverTriggeringElement ?
         rect.top - dialogContainerElem.offsetHeight + triggeringElementHeight + 1 :
         rect.top - dialogContainerElem.offsetHeight - triggeringElementHeight
-      matDialogConfig.position = { left: `${rect.left}px`, top: `${top}px` };
+
+      matDialogConfig.position = { top: `${top}px` };
+      if (this.direction == 'rtl') {
+        let right = window.innerWidth - rect.left - this.config.triggeringElement.offsetWidth;
+        matDialogConfig.position.right = `${right}px`;
+      } else {
+        matDialogConfig.position.left = `${rect.left}px`;
+      }
+
       this.dialogRef.updatePosition(matDialogConfig.position);
     } else {
       this.scaleBottomToTop = false;
@@ -197,17 +236,6 @@ export class PopupDialog {
 
     return out;
   };
-
-  containerTransitionEnd(event: Event) {
-    if (event.target == this.dialogContainerRef.nativeElement && !this.visible) {
-      this.dialogRef.close(this.dialogResult);
-    }
-  }
-
-  public closeDialog(dialogResult?: any) {
-    this.dialogResult = dialogResult;
-    this.visible = false;
-  }
 
   private childOf(node, ancestor) {
     var child = node;
