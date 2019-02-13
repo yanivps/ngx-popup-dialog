@@ -63,7 +63,7 @@ export class PopupDialog {
     @Inject(MAT_DIALOG_DATA) data: PopupDialogData) {
     this.config = data.config;
     this.data = data.data;
-    this.direction = data.config.direction
+    this.direction = data.config.direction || getComputedStyle(this.config.triggeringElement).direction as ('ltr' | 'rtl')
   }
 
   @HostListener('window:scroll', ['$event'])

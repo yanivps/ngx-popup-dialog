@@ -22,7 +22,7 @@ export class AppComponent {
       CoolPopupDialog,
       event.currentTarget,
       {
-        direction: "ltr",
+        // direction: "ltr",
         // coverTriggeringElement: true,
         // scaleToTopOnBottomOverflow: false,
         // suppressCloseOnClickSelectors: ['.supress-close-container'],
