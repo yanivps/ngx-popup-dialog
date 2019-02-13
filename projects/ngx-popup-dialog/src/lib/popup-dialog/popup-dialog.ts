@@ -73,11 +73,22 @@ export class PopupDialog {
     this.positionDialogUpIfBottomOutsideViewport();
   }
 
+  lastClickedElement;
+
   @HostListener('document:mousedown', ['$event'])
   @HostListener('document:mouseup', ['$event'])
   @HostListener('document:click', ['$event'])
   onclick(event) {
     if (!this.isOpened) return;
+
+    // Clicking on element will trigger this callback function multiple times (for mouse down, up and click)
+    // Therefor, we stop execution if we get the same event target.
+    // We reset the lastClickedElement after 100 ms
+    if (this.lastClickedElement == event.target) return;
+    this.lastClickedElement = event.target;
+    setTimeout(() => {
+      this.lastClickedElement = null;
+    }, 100);
 
     var container = this.dialogContainerRef.nativeElement;
     if (container === event.target || this.childOf(event.target, container)) {
