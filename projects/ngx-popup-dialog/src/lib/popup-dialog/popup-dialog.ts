@@ -74,11 +74,42 @@ export class PopupDialog {
   }
 
   lastClickedElement;
+  // set events handled to true to ignore event when popup opened for the first time.
+  mouseDownHandled = true;
+  mouseUpHandled = true;
+  clickHandled = true;
 
   @HostListener('document:mousedown', ['$event'])
+  onMouseDown(event: Event) {
+    this.handleMouseEvent(event);
+    this.mouseDownHandled = true;
+  }
+
   @HostListener('document:mouseup', ['$event'])
+  onMouseUp(event: Event) {
+    if (this.mouseDownHandled || this.clickHandled) {
+      this.mouseDownHandled = false;
+      this.clickHandled = false;
+      return;
+    }
+
+    this.handleMouseEvent(event);
+    this.mouseUpHandled = true;
+  }
+
   @HostListener('document:click', ['$event'])
-  onclick(event) {
+  onClick(event: Event) {
+    if (this.mouseDownHandled || this.mouseUpHandled) {
+      this.mouseDownHandled = false;
+      this.mouseUpHandled = false;
+      return;
+    }
+
+    this.handleMouseEvent(event);
+    this.clickHandled = true;
+  }
+
+  handleMouseEvent(event: Event) {
     if (!this.isOpened) return;
 
     // Clicking on element will trigger this callback function multiple times (for mouse down, up and click)
@@ -88,7 +119,7 @@ export class PopupDialog {
     this.lastClickedElement = event.target;
     setTimeout(() => {
       this.lastClickedElement = null;
-    }, 100);
+    }, 200);
 
     var container = this.dialogContainerRef.nativeElement;
     if (container === event.target || this.childOf(event.target, container)) {
@@ -115,6 +146,7 @@ export class PopupDialog {
     this.loadComponent();
     this.dialogRef.beforeClose().subscribe(x => {
       this.visible = false;
+      this.isOpened = false;
     })
     this.dialogRef.afterOpen().subscribe(x => {
       this.isOpened = true;
@@ -155,6 +187,7 @@ export class PopupDialog {
   closeDialog(dialogResult?: any) {
     this.dialogResult = dialogResult;
     this.visible = false;
+    this.isOpened = false;
   }
 
   private registerOrUnregisterAncestrosScrollEvent(register = true) {
